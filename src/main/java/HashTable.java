@@ -28,7 +28,7 @@ public class HashTable<K, V> implements Iterable<KeyValue<K, V>> {
     }
 
 //Получить коэффициент заполнения
-    public double getCoefficient() {
+    public double getLoadFactor() {
         return (double) (this.size() + 1) / capacity;
     }
 

@@ -1,7 +1,7 @@
 public class Main {
     public static void main(String[] args) {
 
-        HashTable<String, Integer> table = new HashTable<>();
+        /*HashTable<String, Integer> table = new HashTable<>();
         for (int i = 0; i < 30000; i++) {
             String key = "Ключ №" + i;
             table.add(key, i);
@@ -9,7 +9,7 @@ public class Main {
 
         System.out.println("Размер таблицы: " + table.size());
         System.out.println("Количество коллизий: " + table.countCollisions());
-        System.out.println("Коэффициент заполнения: " + table.getCoefficient());
+        System.out.println("Коэффициент заполнения: " + table.getLoadFactor());
 
         table.add("A", 1);
         table.add("B", 2);
@@ -45,7 +45,10 @@ public class Main {
         System.out.println("Получение ключа-значения итератором: ");
         for (KeyValue<String, Integer> entry : table) {
             System.out.println(entry.getKey() + ", " + entry.getValue());
-        }
-        System.out.println(16%16);
+        }*/
+        HashTable<String, Integer> table = new HashTable<>();
+        table.add("A", 1);
+        table.add("B", 2);
+        System.out.println(table.getLoadFactor());
     }
 }
