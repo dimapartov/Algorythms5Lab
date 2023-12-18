@@ -9,7 +9,6 @@ public class HashTable<K, V> implements Iterable<KeyValue<K, V>> {
     private int count;
     private int capacity;
 
-//Create hash table
     public HashTable() {
         this.capacity = INITIAL_CAPACITY;
         this.slots = new LinkedList[capacity];
@@ -18,7 +17,6 @@ public class HashTable<K, V> implements Iterable<KeyValue<K, V>> {
         }
     }
 
-//Create hash table with capacity
     public HashTable(int capacity) {
         this.capacity = capacity;
         this.slots = new LinkedList[capacity];
@@ -27,12 +25,10 @@ public class HashTable<K, V> implements Iterable<KeyValue<K, V>> {
         }
     }
 
-//Получить коэффициент заполнения
     public double getLoadFactor() {
-        return (double) (this.size() + 1) / capacity;
+        return (double) this.size() / capacity;
     }
 
-//Подсчитать количество коллизий
     public int countCollisions() {
         int collisionsCount = 0;
         for (LinkedList<KeyValue<K, V>> bucket : slots) {
@@ -43,8 +39,8 @@ public class HashTable<K, V> implements Iterable<KeyValue<K, V>> {
         return collisionsCount;
     }
 
-//Добавить элемент. При коллизии используется метод цепочек
     public void add(K key, V value) {
+        growIfNeeded();
         int slot = findSlotNumber(key);
         LinkedList<KeyValue<K, V>> bucket = slots[slot];
         for (KeyValue<K, V> entry : bucket) {
@@ -55,22 +51,18 @@ public class HashTable<K, V> implements Iterable<KeyValue<K, V>> {
         }
         bucket.add(new KeyValue<>(key, value));
         count++;
-        growIfNeeded();
     }
 
-//Определяет индекс слота(бакета) для заданного ключа
     private int findSlotNumber(K key) {
         return Math.abs(key.hashCode()) % this.slots.length;
     }
 
-//Check if there is need to grow
     private void growIfNeeded() {
         if ((double) (this.size() + 1) / this.capacity() > LOAD_FACTOR) {
             this.grow();
         }
     }
 
-//Grow
     private void grow() {
         int newCapacity = this.capacity * 2;
         LinkedList<KeyValue<K, V>>[] newSlots = new LinkedList[newCapacity];
@@ -87,17 +79,14 @@ public class HashTable<K, V> implements Iterable<KeyValue<K, V>> {
         this.capacity = newCapacity;
     }
 
-//Return amount of elements in hash table
     public int size() {
         return count;
     }
 
-//Return capacity of hash table
     public int capacity() {
         return capacity;
     }
 
-//Add element if there is none, replace value if key alreade exists
     public boolean addOrReplace(K key, V value) {
         int slot = findSlotNumber(key);
         LinkedList<KeyValue<K, V>> bucket = slots[slot];
@@ -107,13 +96,12 @@ public class HashTable<K, V> implements Iterable<KeyValue<K, V>> {
                 return false;
             }
         }
+        growIfNeeded();
         bucket.add(new KeyValue<>(key, value));
         count++;
-        growIfNeeded();
         return true;
     }
 
-//Return value for this key
     public V get(K key) {
         int slot = findSlotNumber(key);
         LinkedList<KeyValue<K, V>> bucket = slots[slot];
@@ -125,7 +113,6 @@ public class HashTable<K, V> implements Iterable<KeyValue<K, V>> {
         return null;
     }
 
-//Return key-value object for this key
     public KeyValue<K, V> find(K key) {
         int slot = findSlotNumber(key);
         LinkedList<KeyValue<K, V>> bucket = slots[slot];
@@ -137,7 +124,6 @@ public class HashTable<K, V> implements Iterable<KeyValue<K, V>> {
         return null;
     }
 
-//Check if there is this key in hash table
     public boolean containsKey(K key) {
         int slot = findSlotNumber(key);
         LinkedList<KeyValue<K, V>> bucket = slots[slot];
@@ -149,7 +135,6 @@ public class HashTable<K, V> implements Iterable<KeyValue<K, V>> {
         return false;
     }
 
-//Delete element with this key
     public boolean remove(K key) {
         int slot = findSlotNumber(key);
         LinkedList<KeyValue<K, V>> bucket = slots[slot];
@@ -165,7 +150,6 @@ public class HashTable<K, V> implements Iterable<KeyValue<K, V>> {
         return false;
     }
 
-//Clear hash table from all elements
     public void clear() {
         for (int i = 0; i < capacity; i++) {
             slots[i].clear();
@@ -173,7 +157,6 @@ public class HashTable<K, V> implements Iterable<KeyValue<K, V>> {
         count = 0;
     }
 
-//Returns iterator for all keys
     public Iterable<K> keys() {
         LinkedList<K> keys = new LinkedList<>();
         for (LinkedList<KeyValue<K, V>> bucket : slots) {
@@ -184,7 +167,6 @@ public class HashTable<K, V> implements Iterable<KeyValue<K, V>> {
         return keys;
     }
 
-//Returns iterator for all values
     public Iterable<V> values() {
         LinkedList<V> values = new LinkedList<>();
         for (LinkedList<KeyValue<K, V>> bucket : slots) {
@@ -195,7 +177,6 @@ public class HashTable<K, V> implements Iterable<KeyValue<K, V>> {
         return values;
     }
 
-//Iterator
     @Override
     public Iterator<KeyValue<K, V>> iterator() {
         LinkedList<KeyValue<K, V>> allEntries = new LinkedList<>();
